@@ -1,0 +1,17 @@
+function [x,v,a]=Newmark(M,K,C,dt,F,X0,ks,R)    
+cn=length(M);
+dF=diff(F,1,2);
+x(:,1)=X0(1:cn);
+v(:,1)=X0(cn+1:2*cn);
+a(:,1)=X0(2*cn+1:3*cn);
+beta=1/4;
+for i=1:length(F)-1
+     k_=K+(1/dt/dt/beta).*M+(1/2/dt/beta).*C;
+     dF_=dF(:,i)+(M.*1/beta/dt+1/2/beta.*C)*v(:,i)+(1/2/beta.*M-dt*(1-1/4/beta).*C)*a(:,i);
+     dx=pinv(k_)*dF_;
+     dv=(1/2/beta/dt).*dx-(1/2/beta).*v(:,i)+((1-1/4/beta)*dt).*a(:,i);
+     x(:,i+1)=x(:,i)+dx;
+     v(:,i+1)=v(:,i)+dv;
+     Fs(:,i+1)=ks*x(:,i+1)+R;
+     a(:,i+1)=pinv(M)*(F(:,i+1)-C*v(:,i+1)-Fs(:,i+1));
+end
