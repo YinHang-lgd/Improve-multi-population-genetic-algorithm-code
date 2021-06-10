@@ -1,0 +1,17 @@
+col=size(X,1);
+for d=1:col
+wavefile=char('XX.dat'); 
+ugmax=5;
+[ug,t,tf,dt]=wave1(wavefile,ugmax);
+[M]=[]
+[M0]=[]
+[K]=[]
+[C]=[] 
+[E,F]=waveForce(ug,M0);   
+flag=1;
+cn=length(M);
+X0=zeros(3*cn,1)
+R=zeros(cn,1); 
+[d,v,a]=Newmark(M,K,C,dt,F,X0,K,R);
+obj(i,1)=-10*max(max(abs(d(1:40,:))))-max(max(abs(a(1:40,:))))
+end
